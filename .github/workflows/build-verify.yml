@@ -5,7 +5,7 @@ on:
       - master
       - 1.10.x
       - 1.11.x
-      - feat/1499 # TODO remove after test 
+      - feat/1499 # TODO remove after test
     tags:
       - "**"
     paths-ignore:
@@ -42,6 +42,10 @@ jobs:
         with:
           image-tag: ${{ vars.IMAGE_TAG }}
           build-timestamp: ${{ steps.run-build.outputs.build-timestamp }}
+          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
+          quay-username: ${{ secrets.QUAY_USERNAME }}
+          quay-token: ${{ secrets.QUAY_PASSWORD }}
   call-package-native:
     needs: build-verify-package
     if: ${{ github.event_name }} == 'push'
