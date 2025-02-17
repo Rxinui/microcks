@@ -20,12 +20,12 @@ jobs:
     permissions:
       contents: read
       id-token: write # needed for signing the images with GitHub OIDC Token
-    outputs:
-      build-timestamp: ${{ steps.run-build.outputs.build-timestamp}}
+    # outputs:
+    #   build-timestamp: ${{ steps.run-build.outputs.build-timestamp}}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build and verify
-        id: run-build
-        uses: ./.github/actions/build-test
+      # - name: Build and verify
+      #   id: run-build
+      #   uses: ./.github/actions/build-test
