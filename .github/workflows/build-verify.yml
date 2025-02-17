@@ -14,7 +14,7 @@ on:
       - "*.md"
 permissions: read-all
 jobs:
-  build-verify-package:
+  build-verify:
     runs-on: ubuntu-latest
     environment: build-${{ github.ref_name }}
     permissions:
@@ -29,35 +29,3 @@ jobs:
       - name: Build and verify
         id: run-build
         uses: ./.github/actions/build-test
-  package:
-    needs: ["build-verify-package"]
-    runs-on: ubuntu-latest
-    environment: build-${{ github.ref_name }}
-    permissions:
-      contents: read
-      id-token: write # needed for signing the images with GitHub OIDC Token
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Package build
-        id: run-package
-        if: ${{ github.repository_owner }} == 'microcks'
-        uses: ./.github/actions/package-build
-        with:
-          image-tag: ${{ vars.IMAGE_TAG }}
-          build-timestamp: ${{ needs.build-verify-package.outputs.build-timestamp }}
-          dockerhub-username: ${{ secrets.DOCKERHUB_USERNAME }}
-          dockerhub-token: ${{ secrets.DOCKERHUB_TOKEN }}
-          quay-username: ${{ secrets.QUAY_USERNAME }}
-          quay-token: ${{ secrets.QUAY_PASSWORD }}
-  call-package-native:
-    needs: ["package"]
-    if: ${{ github.repository_owner }} == 'microcks'
-    permissions:
-      contents: read
-      id-token: write # needed for signing the images with GitHub OIDC Token
-    uses: ./.github/workflows/package-native.yml
-    with:
-      image-tag: ${{ vars.IMAGE_TAG }}
-    secrets: inherit
